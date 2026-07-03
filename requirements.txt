@@ -1,0 +1,9 @@
+pandas
+numpy
+matplotlib
+scipy
+requests
+openpyxl
+tiingo
+yfinance
+flashalpha
