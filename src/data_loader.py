@@ -12,11 +12,9 @@ except NameError:
 
 
 def load_secrets(secrets_path=None):
-    """Load API keys from a local secrets.json file (kept out of version control)."""
     path = secrets_path or os.path.join(SCRIPT_DIR, "secrets.json")
     with open(path) as f:
-        secrets = json.load(f)
-    return secrets
+        return json.load(f)
 
 
 def get_tiingo_client(secrets=None):
@@ -25,13 +23,13 @@ def get_tiingo_client(secrets=None):
     return TiingoClient(config)
 
 
-def load_excel(filepath, script_dir=None):
+def load_excel(filepath, data_dir=None):
     """Load a single Excel file (e.g. ZFL.TO.xlsx) with date index."""
-    script_dir = script_dir or SCRIPT_DIR
-    return pd.read_excel(os.path.join(script_dir, filepath), index_col=0, parse_dates=True)
+    data_dir = data_dir or SCRIPT_DIR
+    return pd.read_excel(os.path.join(data_dir, filepath), index_col=0, parse_dates=True)
 
 
-def load_all_assets(script_dir=None):
+def load_all_assets(data_dir=None):
     """Load bond/equity/gold ETF price histories from Excel files."""
     files = {
         "bond1": "ZFL.TO.xlsx",
@@ -39,8 +37,7 @@ def load_all_assets(script_dir=None):
         "equity": "VFV.TO.xlsx",
         "gold": "CGL.TO.xlsx",
     }
-    return {key: load_excel(path, script_dir) for key, path in files.items()}
-
+    return {key: load_excel(path, data_dir) for key, path in files.items()}
 
 def clean_data(df):
     """Drop NaNs and compute log returns on the 'Close' column."""
@@ -56,10 +53,10 @@ def compute_volatility(df, window=30):
     return df
 
 
-def load_tbill_data(filepath="tbill_3mnth.xlsx", script_dir=None):
+def load_tbill_data(filepath="tbill_3mnth.xlsx", data_dir=None):
     """Load and clean 3-month T-bill rate data."""
-    script_dir = script_dir or SCRIPT_DIR
-    df_t = pd.read_excel(os.path.join(script_dir, filepath))
+    data_dir = data_dir or SCRIPT_DIR
+    df_t = pd.read_excel(os.path.join(data_dir, filepath))
     df_t.columns = ["date", "rf"]
     df_t["date"] = pd.to_datetime(df_t["date"], errors="coerce")
     df_t["rf"] = pd.to_numeric(df_t["rf"], errors="coerce")
