@@ -23,36 +23,6 @@ def get_tiingo_client(secrets=None):
     return TiingoClient(config)
 
 
-def load_excel(filepath, data_dir=None):
-    """Load a single Excel file (e.g. ZFL.TO.xlsx) with date index."""
-    data_dir = data_dir or SCRIPT_DIR
-    return pd.read_excel(os.path.join(data_dir, filepath), index_col=0, parse_dates=True)
-
-
-def load_all_assets(data_dir=None):
-    """Load bond/equity/gold ETF price histories from Excel files."""
-    files = {
-        "bond1": "ZFL.TO.xlsx",
-        "bond2": "ZFM.TO.xlsx",
-        "equity": "VFV.TO.xlsx",
-        "gold": "CGL.TO.xlsx",
-    }
-    return {key: load_excel(path, data_dir) for key, path in files.items()}
-
-def clean_data(df):
-    """Drop NaNs and compute log returns on the 'Close' column."""
-    df = df.dropna().copy()
-    df["Returns"] = np.log(df["Close"] / df["Close"].shift(1))
-    return df
-
-
-def compute_volatility(df, window=30):
-    """Rolling annualized volatility from log returns."""
-    df = df.copy()
-    df["Volatility"] = df["Returns"].rolling(window).std() * np.sqrt(252)
-    return df
-
-
 def load_tbill_data(filepath="tbill_3mnth.xlsx", data_dir=None):
     """Load and clean 3-month T-bill rate data."""
     data_dir = data_dir or SCRIPT_DIR
