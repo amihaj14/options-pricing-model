@@ -4,7 +4,7 @@ A Python-based options pricing and analysis toolkit that combines Black-Scholes 
 
 ## Overview
 
-This project prices European-style options on ==AMD== using two independent methods — closed-form Black-Scholes and Monte Carlo simulation — and compares both against real market prices fetched from a live option chain API. It also solves for implied volatility using a Newton-Raphson method with a Brent's-method fallback, and builds an implied volatility smile from market data.
+This project prices European-style options on AMD using two independent methods — closed-form Black-Scholes and Monte Carlo simulation — and compares both against real market prices fetched from a live option chain API. It also solves for implied volatility using a Newton-Raphson method with a Brent's-method fallback, and builds an implied volatility smile from market data.
 
 The goal is not just to price options, but to validate model assumptions: how closely do Black-Scholes and Monte Carlo agree with each other under matched inputs, and how far does either diverge from what the market is actually pricing.
 
