@@ -17,7 +17,7 @@ The goal is not just to price options, but to validate model assumptions: how cl
 - **Model validation** — Black-Scholes vs. Monte Carlo price/IV comparison, with put-call parity and pricing error analysis
 
 ## Project Structure
-'''
+```
 options-pricing-model/
 ├── data/
 │   └── tbill_3mnth.xlsx
@@ -30,7 +30,7 @@ options-pricing-model/
 ├── secrets.json             # API keys (excluded from version control)
 ├── optionsPricing.ipynb     # Main analysis notebook
 └── README.md
-'''
+```
 
 ## Setup
 
