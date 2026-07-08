@@ -3,12 +3,10 @@ from scipy.stats import norm
 
 
 def N(d):
-    """Standard normal CDF."""
     return norm.cdf(d)
 
 
 def N_prime(d):
-    """Standard normal PDF."""
     return norm.pdf(d)
 
 
@@ -19,9 +17,7 @@ def _d1_d2(S, K, T, r, sigma):
 
 
 def black_scholes(S, K, T, r, sigma, option_type="call"):
-    """Black-Scholes price for a European call or put."""
     if T <= 0:
-        # Option has expired: value equals intrinsic value, no time value left
         if option_type == "call":
             return max(S - K, 0.0)
         elif option_type == "put":
@@ -82,7 +78,6 @@ def rho(S, K, T, r, sigma, option_type="call"):
 
 
 def build_greeks_table(S, K, T, r, sigma, option_type="call"):
-    """Build a DataFrame of Greeks across a list/array of strikes K."""
     import pandas as pd
     return pd.DataFrame({
         "Strike Price": K,
@@ -95,7 +90,6 @@ def build_greeks_table(S, K, T, r, sigma, option_type="call"):
 
 
 def build_bs_price_table(S, K, T, r, sigma):
-    """Build a DataFrame comparing B-S call/put prices across strikes K."""
     import pandas as pd
     return pd.DataFrame({
         "Strike Price": K,

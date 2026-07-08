@@ -1,15 +1,13 @@
 import pandas as pd
 import numpy as np
 
-# Monte Carlo Pricing Model
-# Simulate terminal prices once; the strike only enters the payoff, not the simulation.
+
 def simulate_terminal(S, r, sigma, T, N, seed=None):
     rng = np.random.default_rng(seed)
     Z = rng.standard_normal(N)
     return S*np.exp((r - 0.5*sigma**2)*T + sigma*np.sqrt(T)*Z)
 
 def mc_price(St, K, r, T, option_type="call"):
-    """Discounted MC price for a single strike given simulated terminal prices St."""
     disc = np.exp(-r * T)
     if option_type == "call":
         return disc * np.maximum(St - K, 0).mean()
@@ -20,11 +18,6 @@ def mc_price(St, K, r, T, option_type="call"):
     
 
 def build_mc_price_table(S, r, sigma, T, K, n_sims=10_000_000, seed=None):
-    """Build a DataFrame of MC call/put prices across strikes K.
-
-    Uses one simulated path set (St) reused across all strikes, since the
-    strike only enters the payoff, not the simulation.
-    """
     St = simulate_terminal(S, r, sigma, T, n_sims, seed=seed)
     return pd.DataFrame({
         "Strike Price": K,

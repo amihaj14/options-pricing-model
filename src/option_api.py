@@ -8,8 +8,6 @@ BASE_URL = "https://api.onclickmedia.com/options/"
 
 
 def safe_get_json(url, params, timeout=15):
-    """GET request that returns parsed JSON, or None on any failure
-    (bad status, empty body, invalid JSON)."""
     resp = requests.get(url, params=params, timeout=timeout)
     if resp.status_code != 200:
         return None
@@ -23,7 +21,6 @@ def safe_get_json(url, params, timeout=15):
 
 
 def get_valid_date(base_params, date_str, url=BASE_URL, max_tries=10, pause=0.5):
-    """Walk backward from date_str to find the most recent date with data."""
     d = dt.strptime(date_str, "%Y-%m-%d")
     for _ in range(max_tries):
         test_params = {**base_params, "date": d.strftime("%Y-%m-%d")}
@@ -36,11 +33,6 @@ def get_valid_date(base_params, date_str, url=BASE_URL, max_tries=10, pause=0.5)
 
 
 def fetch_option_chain(symbol, expiration, valuation_date, S, option_type="call", strike_pct_low=0.91, strike_pct_high=1.16, url=BASE_URL):
-    """Fetch the option chain for `symbol`/`expiration`, auto-correct the
-    valuation date if needed, and filter to a strike band around spot S.
-
-    Returns (opt_chain_df, resolved_valuation_date).
-    """
     base_params = {
         "ticker": symbol,
         "date": valuation_date,

@@ -5,15 +5,8 @@ from scipy.optimize import brentq
 from pricing import black_scholes, vega
 
 
-# Implied Volatility Algorithm
-
-# Figure out how to account for OTM options
-
-# Newton-Raphson method for finding implied volatility
 def iv_NR(S, K, T, r, Pmkt, option_type="call", sigma0=None, tol_sigma=1e-8, tol_price=1e-8, max_iter=100):
     if sigma0 is None:
-        # Brenner-Subrahmanyam: sigma = sqrt(2*pi/T) * (Pmkt/S)
-        # This is for near-ATM calls, need to figure out how to implement for ITM/OTM options
         sigma = np.sqrt(2 * np.pi / T) * (Pmkt / S)
     else:
         sigma = sigma0
@@ -44,8 +37,6 @@ def iv_NR(S, K, T, r, Pmkt, option_type="call", sigma0=None, tol_sigma=1e-8, tol
     raise RuntimeError("Newton method did not converge.")
 
 def iv_brentq(S, K, T, r, Pmkt, option_type="call", lo=1e-6, hi=5.0):
-    """Bracketed (Brent) implied volatility solver - robust fallback for
-    strikes where Newton-Raphson fails (e.g. deep ITM/OTM, tiny Vega)."""
     def f(sigma):
         return black_scholes(S, K, T, r, sigma, option_type=option_type) - Pmkt
     try:
@@ -55,7 +46,6 @@ def iv_brentq(S, K, T, r, Pmkt, option_type="call", lo=1e-6, hi=5.0):
     
 
 def iv_solve(S, K, T, r, Pmkt, option_type="call", sigma0=None):
-    """Try Newton-Raphson first, fall back to Brent's method if it fails."""
     try:
         return iv_NR(S, K, T, r, Pmkt, option_type=option_type, sigma0=sigma0)
     except (ValueError, RuntimeError):
@@ -63,10 +53,6 @@ def iv_solve(S, K, T, r, Pmkt, option_type="call", sigma0=None):
     
 
 def build_iv_table(S, opt_chain, T, r, option_type="call"):
-    """Build a DataFrame of IV + price-check across all rows of opt_chain.
-
-    opt_chain must have 'strike' and 'Pmkt' columns.
-    """
     records = []
     for _, row in opt_chain.iterrows():
         strike = row["strike"]
